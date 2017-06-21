@@ -1,0 +1,30 @@
+//Uva 11559
+#include <stdio.h>
+#include <limits.h>
+
+int main(void)
+{
+//	setbuf(stdout, NULL);
+//	freopen("indata.txt", "r", stdin);
+
+	int nP, bud, nH, nW, i, j, tempBud, tempTotal, avail;
+	int Total = INT_MAX;
+	while (scanf("%d %d %d %d", &nP, &bud, &nH, &nW) != EOF) {
+		Total = INT_MAX;
+		for (i = 0; i < nH; i++) {
+			tempTotal = INT_MAX;
+			scanf("%d", &tempBud);
+			for (j = 0; j < nW; j++) {
+				scanf("%d", &avail);
+				if (nP <= avail)
+					tempTotal = tempBud * nP;
+			}
+			if (tempTotal < Total)
+				Total = tempTotal;
+		}
+		if ((Total != INT_MAX) && (Total <= bud))
+			printf("%d\n", Total);
+		else
+			printf("stay home\n");
+	}
+}
