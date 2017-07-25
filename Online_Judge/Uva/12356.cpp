@@ -1,6 +1,8 @@
-//Uva 12356
+//Uva 12356 not solve
 #include <stdio.h>
 #include <memory.h>
+
+void init_arr(char* prev, char* next);
 
 int main(void)
 {
@@ -11,27 +13,53 @@ int main(void)
 
 	while (scanf("%d %d", &S, &B) && (S || B))
 	{
-		char soldierArray[100001] = { 0, };
-		int L = 0, R = 0, i = 0, rmL, rmR;
+		char prevArray[100002] = { 0, };
+		char nextArray[100002] = { 0, };
+		char IsRemoved[100002] = { 0, };
+		int i, L, R;
 
+		init_arr(prevArray, nextArray);
+
+		prevArray[0] = '*'; nextArray[S+1] = '*';
 		for (i = 0; i < B; i++)
 		{
 			scanf("%d %d", &L, &R);
-			memset(soldierArray + L, 1, R - L + 1);
-			while (soldierArray[L] && L > 0) L--;
-			while (soldierArray[R] && R <= S) R++;
-			if (L <= 0)
+
+			if((L - 1) - (prevArray[L - 1]) == 1 && prevArray[L - 1] != '*') // exist prev node
+				memset(prevArray + L, prevArray[L], R - L + 1);
+			else
+				memset(prevArray + L, prevArray[L - 1], R - L + 1);
+			if ((nextArray[R + 1]) - (R + 1) == 1 && nextArray[R + 1] != '*') // exist prev node
+				memset(nextArray + L, nextArray[R], R - L + 1);
+			else
+				memset(nextArray + L, nextArray[R + 1], R - L + 1);
+
+			memset(IsRemoved + L, 1, R - L + 1);
+			while (prevArray[L] != '*' && IsRemoved[L]) L = prevArray[L];
+			while (nextArray[R] != '*' && IsRemoved[R]) R = nextArray[R];
+
+			if (prevArray[L] == '*')
 				printf("* ");
 			else
-				printf("%d ", L);
+				printf("%d ", L); // 1 is head
 
-			if (R > S)
+			if (nextArray[R] == '*')
 				printf("*\n");
 			else
-				printf("%d\n", R);
+				printf("%d\n", R); // R == S is tail
 		}
+		
 		printf("-\n");
 	}
 
 	return 0;
+}
+void init_arr(char* prev, char* next)
+{
+	int i;
+	for (i = 1; i <= 100000; i++)
+	{
+		prev[i] = i - 1;
+		next[i] = i + 1;
+	}
 }
